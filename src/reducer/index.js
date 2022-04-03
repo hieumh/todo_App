@@ -1,11 +1,13 @@
 import { combineReducers } from "redux";
 
 import accountReducer from "./accountReducer";
-import tasksReducer from "./tasksReducer";
+import taskManagementReducer from "./taskManagementReducer";
+import createOrEditReducer from "./createOrEditTaskReducer";
 
 const rootReducer = combineReducers({
   account: accountReducer,
-  tasks: tasksReducer,
+  tasks: taskManagementReducer,
+  selectedTask: createOrEditReducer,
 });
 
 export default rootReducer;

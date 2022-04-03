@@ -13,24 +13,24 @@ import React, { useEffect } from "react";
 import moment from "moment";
 
 export default function ModalSubTask({
-  selectedTask,
-  setSelectedTask,
+  selectedSubTask,
+  setselectedSubTask,
   updateSubTask,
 }) {
   const [form] = Form.useForm();
 
   function handleFinish(value) {
     updateSubTask({
-      ...selectedTask,
+      ...selectedSubTask,
       ...value,
     });
   }
 
   useEffect(() => {
     form.setFieldsValue({
-      ...selectedTask,
-      start: moment(selectedTask.start),
-      end: moment(selectedTask.end),
+      ...selectedSubTask,
+      start: moment(selectedSubTask.start),
+      end: moment(selectedSubTask.end),
     });
   }, []);
 
@@ -39,7 +39,7 @@ export default function ModalSubTask({
       title="Update Subtask"
       visible={true}
       onOk={() => updateSubTask(form)}
-      onCancel={() => setSelectedTask(null)}
+      onCancel={() => setselectedSubTask(null)}
       footer={null}
     >
       <Form

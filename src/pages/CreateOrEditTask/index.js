@@ -10,12 +10,19 @@ import {
   Table,
   Typography,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import * as actionTypes from "../../constant/ActionTypes";
 import ModalSubTask from "../../container/form/ModalSubTask.js/index.js";
+import useQueryParams from "../../hook/useQueryParams";
+import {
+  getTaskById,
+  createSubTask,
+  setSelectedSubTask,
+  updateTargetSubTask,
+} from "../../actions/createOrEditTaskActions";
 import { connect } from "react-redux";
 
 const localizer = momentLocalizer(moment);
@@ -35,23 +42,47 @@ const columns = [
   { title: "Status", dataIndex: "status" },
 ];
 
-function CreateOrEditTask({eventCalendar, selectedTask, setSelectedTask, addSubTask, updateSubTask}) {
-  const [eventCalendar, setEventCalendar] = useState([]);
-  const [selectedTask, setSelectedTask] = useState(null);
+// selectedSubtask: dùng để mở modal
+
+function CreateOrEditTask({
+  taskInfo,
+  eventCalendar,
+  selectedSubTask,
+  setSelectedSubTask,
+  createSubTask,
+  updateTargetSubTask,
+  getTaskById,
+  // addSubTask,
+}) {
+  // get value id from url
+  // const [eventCalendar, setEventCalendar] = useState([]);
+  // const [selectedSubTask, setSelectedSubTask] = useState(null);
   const [form] = Form.useForm();
+  const query = useQueryParams();
+
+  useEffect(() => {
+    form.setFieldsValue({
+      ...taskInfo,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleRangeChange(event) {
-    const newEvent = {
-      ...event,
-      id: eventCalendar.length,
-      title: actionTypes.DEFAULT_NAME_TASK + " " + (eventCalendar.length + 1),
-      status: "Start",
-    };
-    setEventCalendar((prev) => [...prev, newEvent]);
+    createSubTask({
+      id: taskInfo.id,
+      subId: eventCalendar.length,
+      data: {
+        ...event,
+        subId: eventCalendar.length,
+        title: actionTypes.DEFAULT_NAME_TASK + " " + (eventCalendar.length + 1),
+        status: "Start",
+      },
+    });
   }
 
   function handleSelectEvent(event) {
-    setSelectedTask(event);
+    // createSubTask(event);
+    setSelectedSubTask(event);
   }
 
   function handleSubmit(value) {
@@ -59,13 +90,18 @@ function CreateOrEditTask({eventCalendar, selectedTask, setSelectedTask, addSubT
   }
 
   function updateSubTask(updateValue) {
-    setSelectedTask(null);
-    const newEventCalendar = [...eventCalendar];
-    newEventCalendar[updateValue.id] = {
+    setSelectedSubTask(null);
+    console.log(updateValue);
+    updateTargetSubTask({
       ...updateValue,
-    };
-    setEventCalendar(newEventCalendar);
+      id: taskInfo.id,
+      subId: updateValue.id,
+    });
   }
+
+  useEffect(() => {
+    getTaskById(query.get("id"));
+  }, []);
 
   return (
     <div>
@@ -103,8 +139,6 @@ function CreateOrEditTask({eventCalendar, selectedTask, setSelectedTask, addSubT
             </Col>
           </Row>
 
-
-
           <Divider />
           <Typography.Title level={4}>Step of work</Typography.Title>
 
@@ -141,10 +175,10 @@ function CreateOrEditTask({eventCalendar, selectedTask, setSelectedTask, addSubT
           </>
         </Form>
       </Card>
-      {selectedTask ? (
+      {selectedSubTask ? (
         <ModalSubTask
-          selectedTask={selectedTask}
-          setSelectedTask={setSelectedTask}
+          selectedSubTask={selectedSubTask}
+          setSelectedSubTask={setSelectedSubTask}
           updateSubTask={updateSubTask}
         />
       ) : (
@@ -156,12 +190,14 @@ function CreateOrEditTask({eventCalendar, selectedTask, setSelectedTask, addSubT
 
 export default connect(
   (state) => ({
-    eventCalendar: state.tasks.subTasks,
-    selectedTask: state.tasks.selectedTask || null,
+    eventCalendar: state.selectedTask?.subTasks || null,
+    selectedSubTask: state.selectedTask?.selectedSubTask || null,
+    taskInfo: state.selectedTask || null,
   }),
   {
-    addSubTask,
-    updateSubTask,
-    setSelectedTask,
+    createSubTask,
+    getTaskById,
+    setSelectedSubTask,
+    updateTargetSubTask,
   }
-)(CreateOrEditTask)
+)(CreateOrEditTask);
