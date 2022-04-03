@@ -1,6 +1,10 @@
 import { combineEpics } from "redux-observable";
-import accountEpic from "./accountEpic";
-import einsMatrixEpic from "./einsMatrixEpic";
+// import { accountEpic } from "./accountEpic";
+import { createOrEditTaskEpic } from "./createOrEditTaskEpic";
+import { taskManagementEpic } from "./taskManagementEpic";
 
-const rootEpic = combineEpics(accountEpic, einsMatrixEpic);
-export default rootEpic;
+export const rootEpic = combineEpics(
+  //   ...accountEpic,
+  ...createOrEditTaskEpic,
+  ...taskManagementEpic
+);

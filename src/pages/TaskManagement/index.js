@@ -1,6 +1,6 @@
 import { EditOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import { Card, Col, Collapse, Divider, Row, Typography } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useShowTime from "../../hook/useShowTime";
 import moment from "moment";
@@ -13,7 +13,7 @@ import { connect } from "react-redux";
 //     start: ""
 //     end: ""
 //     status: done | failed | inProgress
-//     selectedTask:{} | null
+//     selectedSubTask:{} | null
 //     subtask: [{
 //     title: "",
 //     id: "",
@@ -24,7 +24,7 @@ import { connect } from "react-redux";
 
 //     }
 
-function TaskManagement({tasks}) {
+function TaskManagement({ tasks }) {
   const time = useShowTime();
   // const tasks = [
   //   {
@@ -71,7 +71,7 @@ function TaskManagement({tasks}) {
         }
       >
         <Collapse>
-          {tasks?.map((task, index) => (
+          {tasks?.map && tasks?.map((task, index) => (
             <Collapse.Panel
               key={index}
               header={task.nameTask}
@@ -95,7 +95,7 @@ function TaskManagement({tasks}) {
                 </div>
               ))}
             </Collapse.Panel>
-          ))}
+          )) || null }
         </Collapse>
       </Card>
     </div>
@@ -104,6 +104,6 @@ function TaskManagement({tasks}) {
 
 export default connect(
   (state) => ({
-    tasks: state.tasks
-  })
-)(TaskManagement)
+    tasks: state.tasks,
+  }),
+)(TaskManagement);

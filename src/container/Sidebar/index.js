@@ -15,7 +15,7 @@ export default function Sidebar() {
       </Header>
       <Menu mode="inline" style={{ height: "100%", borderRight: 0 }}>
         <Item key="tasks"><Link to="/">Tasks management</Link></Item>
-        <Item key="tasks"><Link to="/statistics">Statistics</Link></Item>
+        <Item key="statistics"><Link to="/statistics">Statistics</Link></Item>
 
 
         <SubMenu key={"List Tasks"} title="List Tasks">
