@@ -11,11 +11,14 @@ import {
 } from "antd";
 import React, { useEffect } from "react";
 import moment from "moment";
+// import { removeTargetSubTask } from "../../../actions/createOrEditTaskActions";
 
 export default function ModalSubTask({
   selectedSubTask,
-  setselectedSubTask,
+  setSelectedSubTask,
   updateSubTask,
+  taskInfo,
+  removeTargetSubTask,
 }) {
   const [form] = Form.useForm();
 
@@ -24,6 +27,17 @@ export default function ModalSubTask({
       ...selectedSubTask,
       ...value,
     });
+  }
+
+  function handleDelete() {
+    const subTask = form.getFieldsValue(true);
+    removeTargetSubTask({
+      ...subTask,
+      start: moment(subTask.start).toString(),
+      end: moment(subTask.end).toString(),
+      id: taskInfo.id,
+    });
+    setSelectedSubTask(null);
   }
 
   useEffect(() => {
@@ -39,7 +53,7 @@ export default function ModalSubTask({
       title="Update Subtask"
       visible={true}
       onOk={() => updateSubTask(form)}
-      onCancel={() => setselectedSubTask(null)}
+      onCancel={() => setSelectedSubTask(null)}
       footer={null}
     >
       <Form
@@ -73,7 +87,12 @@ export default function ModalSubTask({
         </Form.Item>
 
         <Row>
-          <Col span={24} style={{ textAlign: "right" }}>
+          <Col offset="16" span="4">
+            <Form.Item>
+              <Button onClick={handleDelete}>Delete</Button>
+            </Form.Item>
+          </Col>
+          <Col span="4">
             <Form.Item>
               <Button type="primary" htmlType="submit">
                 Update

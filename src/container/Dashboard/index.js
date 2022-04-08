@@ -10,25 +10,32 @@ const { Content } = Layout;
 export default function Dashboard() {
   return (
     <Router>
-      <Layout style={{ height: "100%" }}>
-        <Sidebar />
-        <Layout>
-          <Title />
-          <Content
-            style={{
-              backgroundColor: "#ececec",
-              padding: "30px",
-              overflow: "auto",
-            }}
-          >
-            <Routes>
-              {routes.map(({ element, pathname }) => {
-                return <Route key={pathname} exact path={pathname} element={element} />;
-              })}
-            </Routes>
-          </Content>
+        <Layout style={{ height: "100%" }}>
+          <Sidebar />
+          <Layout>
+            <Title />
+            <Content
+              style={{
+                backgroundColor: "#ececec",
+                padding: "30px",
+                overflow: "auto",
+              }}
+            >
+              <Routes>
+                {routes.map(({ element, pathname }) => {
+                  return (
+                    <Route
+                      key={pathname}
+                      exact
+                      path={pathname}
+                      element={element}
+                    />
+                  );
+                })}
+              </Routes>
+            </Content>
+          </Layout>
         </Layout>
-      </Layout>
     </Router>
   );
 }

@@ -5,12 +5,29 @@ export const DEFAULT_NAME_TASK = "New task";
 export const GET_ALL_TASKS = "[Task management] GET_ALL_TASKS";
 export const GET_ALL_TASKS_SUCCESS = "[Task management] GET_ALL_TASKS_SUCCESS";
 export const GET_ALL_TASKS_FAILURE = "[Task management] GET_ALL_TASKS_FAILURE";
+export const REMOVE_TARGET_TASK = "[Task management] REMOVE_TARGET_TASK";
+export const REMOVE_TARGET_TASK_SUCCESS =
+  "[Task management] REMOVE_TARGET_TASK_SUCCESS";
+export const REMOVE_TARGET_TASK_FAILURE =
+  "[Task management] REMOVE_TARGET_TASK_FAILURE";
+
+// create task
+export const ADD_TASK = "[Task edit] ADD_TASK";
+export const ADD_TASK_SUCCESS = "[Task edit] ADD_TASK_SUCCESS";
+export const ADD_TASK_FAILURE = "[Task edit] ADD_TASK_FAILURE";
 
 // Task edit action
 export const GET_TASK_BY_ID = "[Task edit] GET_TASK_BY_ID";
 export const GET_TASK_BY_ID_SUCCESS = "[Task edit] GET_TASK_BY_ID_SUCCESS";
 export const GET_TASK_BY_ID_FAILURE = "[Task edit] GET_TASK_BY_ID_FAILURE";
-export const ADD_SUB_TASK = "[Task edit] ADD_SUB_TASK";
+export const RESET_SELECTED_TASK = "[Task edit] RESET_SELECTED_TASK";
+export const RESET_SELECTED_TASK_SUCCESS =
+  "[Task edit] RESET_SELECTED_TASK_SUCCESS";
+export const UPDATE_TARGET_TASK = "[Task edit] UPDATE_TARGET_TASK";
+export const UPDATE_TARGET_TASK_SUCCESS =
+  "[Task edit] UPDATE_TARGET_TASK_SUCCESS";
+export const UPDATE_TARGET_TASK_FAILURE =
+  "[Task edit] UPDATE_TARGET_TASK_FAILURE";
 export const CREATE_SUBTASK = "[Task edit] CREATE_SUBTASK";
 export const CREATE_SUBTASK_SUCCESS = "[Task edit] CREATE_SUBTASK_SUCCESS";
 export const CREATE_SUBTASK_FAILURE = "[Task edit] CREATE_SUBTASK_FAILURE";
@@ -31,3 +48,8 @@ export const UPDATE_TARGET_SUBTASK_SUCCESS =
   "[Task edit] UPDATE_TARGET_SUBTASK_SUCCESS";
 export const UPDATE_TARGET_SUBTASK_FAILURE =
   "[Task edit] UPDATE_TARGET_SUBTASK_FAILURE";
+export const REMOVE_TARGET_SUBTASK = "[Task edit] REMOVE_TARGET_SUBTASK";
+export const REMOVE_TARGET_SUBTASK_SUCCESS =
+  "[Task edit] REMOVE_TARGET_SUBTASK_SUCCESS";
+export const REMOVE_TARGET_SUBTASK_FAILURE =
+  "[Task edit] REMOVE_TARGET_SUBTASK_FAILURE";

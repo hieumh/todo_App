@@ -1,11 +1,12 @@
 import { Layout, Menu, Typography } from "antd";
 import React from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 const { Sider, Header } = Layout;
 const { SubMenu, Item } = Menu;
 
-export default function Sidebar() {
+function Sidebar({ tasks }) {
   return (
     <Sider width={200} style={{ overflowY: "auto", overflowX: "hidden" }}>
       <Header>
@@ -14,16 +15,27 @@ export default function Sidebar() {
         </Typography.Text>
       </Header>
       <Menu mode="inline" style={{ height: "100%", borderRight: 0 }}>
-        <Item key="tasks"><Link to="/">Tasks management</Link></Item>
-        <Item key="statistics"><Link to="/statistics">Statistics</Link></Item>
-
+        <Item key="tasks">
+          <Link to="/">Tasks management</Link>
+        </Item>
+        <Item key="statistics">
+          <Link to="/statistics">Statistics</Link>
+        </Item>
 
         <SubMenu key={"List Tasks"} title="List Tasks">
-          <Item key="1">Task 1</Item>
-          <Item key="2">Task 2</Item>
-          <Item key="3">Task 3</Item>
+          {tasks?.map((task, index) => (
+            <Item key={index}>
+              <Link to={"/create-or-edit-task?id=" + task.id}>
+                {task.nameTask}
+              </Link>
+            </Item>
+          ))}
         </SubMenu>
       </Menu>
     </Sider>
   );
 }
+
+export default connect((state) => ({
+  tasks: state.tasks,
+}))(Sidebar);

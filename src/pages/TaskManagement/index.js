@@ -1,56 +1,26 @@
-import { EditOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import { Card, Col, Collapse, Divider, Row, Typography } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusSquareOutlined,
+} from "@ant-design/icons";
+import { Button, Card, Col, Collapse, Divider, Row, Typography } from "antd";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useShowTime from "../../hook/useShowTime";
 import moment from "moment";
 import { connect } from "react-redux";
+import { getAllTasks, removeTargetTask } from "../../actions/taskManagementActions";
 
-// list task:
-// task {
-//     nameTask:""
-//     id: ""
-//     start: ""
-//     end: ""
-//     status: done | failed | inProgress
-//     selectedSubTask:{} | null
-//     subtask: [{
-//     title: "",
-//     id: "",
-//     start: ""
-//     end: ""
-//     status: done | failed | inProgress
-//     },]
-
-//     }
-
-function TaskManagement({ tasks }) {
+function TaskManagement({ tasks, getAllTasks, removeTargetTask }) {
   const time = useShowTime();
-  // const tasks = [
-  //   {
-  //     nameTask: "hello world",
-  //     // id: "",
-  //     start: new Date(),
-  //     end: new Date(),
-  //     status: "done",
-  //     subTasks: [
-  //       {
-  //         title: "hello",
-  //         id: "0",
-  //         start: new Date(),
-  //         end: new Date(),
-  //         status: "failed",
-  //       },
-  //       {
-  //         title: "world",
-  //         id: "1",
-  //         start: new Date(),
-  //         end: new Date(),
-  //         status: "failed",
-  //       },
-  //     ],
-  //   },
-  // ];
+
+  useEffect(() => {
+    getAllTasks();
+  }, []);
+
+  function handleRemoveTask(task) {
+    removeTargetTask(task);
+  }
 
   return (
     <div>
@@ -71,14 +41,19 @@ function TaskManagement({ tasks }) {
         }
       >
         <Collapse>
-          {tasks?.map && tasks?.map((task, index) => (
+          {tasks?.map((task, index) => (
             <Collapse.Panel
               key={index}
               header={task.nameTask}
               extra={
-                <Link to={"/create-or-edit-task?id=" + index}>
-                  <EditOutlined style={{ fontSize: "24px" }} />
-                </Link>
+                <>
+                  <Link to={"/create-or-edit-task?id=" + task.id}>
+                    <EditOutlined style={{ fontSize: "24px" }} />
+                  </Link>
+                  <Button type="link" onClick={() => handleRemoveTask(task)}>
+                    <DeleteOutlined style={{ fontSize: "24px" }} />
+                  </Button>
+                </>
               }
             >
               {task?.subTasks?.map((sub, j) => (
@@ -95,7 +70,7 @@ function TaskManagement({ tasks }) {
                 </div>
               ))}
             </Collapse.Panel>
-          )) || null }
+          ))}
         </Collapse>
       </Card>
     </div>
@@ -106,4 +81,8 @@ export default connect(
   (state) => ({
     tasks: state.tasks,
   }),
+  {
+    getAllTasks,
+    removeTargetTask
+  }
 )(TaskManagement);

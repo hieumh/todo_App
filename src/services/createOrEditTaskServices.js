@@ -1,25 +1,42 @@
-import axiosAuthed from "../constant/AxiosConfig";
+import {
+  readData,
+  updateData,
+  addData,
+  removeData,
+} from "../database/readAndWriteDatabase";
+
+export const addTask = (data) =>
+  addData({ route: `/tasks`, data: data, key: "id" }).catch((err) => {
+    throw err;
+  });
 
 export const getTaskById = (id) =>
-  axiosAuthed
-    .get(`/task/${id}`)
-    .then((res) => res.data)
-    .catch((error) => {
-      throw error;
-    });
+  readData({ route: `/tasks/${id}` }).catch((error) => {
+    throw error;
+  });
 
-export const createSubTask = (id, subId, data) =>
-  axiosAuthed
-    .post(`/task/${id}/sub-task/${subId}`, { ...data })
-    .then((res) => res.data)
-    .catch((error) => {
+export const updateTargetTask = (data) =>
+  updateData({ route: `/tasks/${data.id}`, data: data }).catch((err) => {
+    throw err;
+  });
+
+export const createSubTask = (id, data) =>
+  addData({ route: `/tasks/${id}/subTasks/`, data, key: "subId" }).catch(
+    (error) => {
       throw error;
-    });
+    }
+  );
 
 export const updateTargetSubTask = (data) =>
-  axiosAuthed
-    .put(`/task/${data.id}/sub-task/${data.subId}`, { data })
-    .then((res) => res.data)
-    .catch((error) => {
-      throw error;
-    });
+  updateData({ route: `/tasks/${data.id}/subTasks/${data.subId}`, data }).catch(
+    (err) => {
+      throw err;
+    }
+  );
+
+export const removeTargetSubTask = (data) =>
+  removeData({ route: `/tasks/${data.id}/subTasks/${data.subId}` }).catch(
+    (err) => {
+      throw err;
+    }
+  );

@@ -1,49 +1,49 @@
 import * as actionTypes from "../constant/ActionTypes";
+import { obj2ArrayShallow } from "../utils/utils";
+import moment from "moment";
 
-
-// {
-  //     nameTask: "hello world",
-  //     // id: "",
-  //     start: new Date(),
-  //     end: new Date(),
-  //     status: "done",
-  //     subTasks: [
-  //       {
-  //         title: "hello",
-  //         id: "0",
-  //         start: new Date(),
-  //         end: new Date(),
-  //         status: "failed",
-  //       },
-  //       {
-  //         title: "world",
-  //         id: "1",
-  //         start: new Date(),
-  //         end: new Date(),
-  //         status: "failed",
-  //       },
-  //     ],
-  //   },
 const initState = {
   nameTask: "",
   id: "",
   start: null,
   end: null,
-  subTasks: []
+  subTasks: [],
 };
 
 export default function createOrEditReducer(state = initState, action) {
   switch (action.type) {
-    case actionTypes.GET_TASK_BY_ID_SUCCESS:
+    case actionTypes.ADD_TASK_SUCCESS:
       return {
         ...state,
         ...action.payload,
       };
-    case actionTypes.CREATE_SUBTASK_SUCCESS:
+    case actionTypes.GET_TASK_BY_ID_SUCCESS:
+      const subTasks = obj2ArrayShallow(action.payload.subTasks)
       return {
         ...state,
-        subTasks: [...state.subTask, action.payload],
-        selectedSubTask: action.payload,
+        ...action.payload,
+        subTasks: subTasks.map(subTask => ({
+          ...subTask,
+          start: new Date(subTask.start),
+          end: new Date(subTask.end)
+        })),
+      };
+    case actionTypes.RESET_SELECTED_TASK_SUCCESS:
+      return {};
+    case actionTypes.UPDATE_TARGET_TASK_SUCCESS:
+      return {
+        ...action.payload,
+      };
+    case actionTypes.CREATE_SUBTASK_SUCCESS:
+      const targetSubTask = {
+        ...action.payload,
+        start: new Date(action.payload.start),
+        end: new Date(action.payload.end)
+      }
+      return {
+        ...state,
+        subTasks: [...state.subTasks, targetSubTask],
+        selectedSubTask: targetSubTask,
       };
     case actionTypes.SET_SELECTED_SUBTASK_SUCCESS:
       return {
@@ -54,13 +54,22 @@ export default function createOrEditReducer(state = initState, action) {
       const newEventCalendar = [...state.subTasks];
       newEventCalendar[action.payload.id] = {
         ...action.payload,
+        start: new Date(action.payload.start),
+        end: new Date(action.payload.end)
       };
 
       return {
         ...state,
-        subTask: newEventCalendar,
+        subTasks: newEventCalendar,
       };
-    default: 
+    case actionTypes.REMOVE_TARGET_SUBTASK_SUCCESS:
+      return {
+        ...state,
+        subTasks: state.subTasks.filter(
+          (item) => item.subId !== action.payload.subId
+        ),
+      };
+    default:
       return state;
   }
 }

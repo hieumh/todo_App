@@ -10,20 +10,24 @@ import {
   Table,
   Typography,
 } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import * as actionTypes from "../../constant/ActionTypes";
 import ModalSubTask from "../../container/form/ModalSubTask.js/index.js";
-import useQueryParams from "../../hook/useQueryParams";
 import {
   getTaskById,
   createSubTask,
   setSelectedSubTask,
   updateTargetSubTask,
+  resetSelectedTask,
+  updateTargetTask,
+  addTask,
 } from "../../actions/createOrEditTaskActions";
+import { removeTargetSubTask } from "../../actions/createOrEditTaskActions";
 import { connect } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 
 const localizer = momentLocalizer(moment);
 
@@ -42,7 +46,6 @@ const columns = [
   { title: "Status", dataIndex: "status" },
 ];
 
-// selectedSubtask: dùng để mở modal
 
 function CreateOrEditTask({
   taskInfo,
@@ -52,28 +55,48 @@ function CreateOrEditTask({
   createSubTask,
   updateTargetSubTask,
   getTaskById,
-  // addSubTask,
+  resetSelectedTask,
+  updateTargetTask,
+  removeTargetSubTask,
+  addTask,
 }) {
-  // get value id from url
-  // const [eventCalendar, setEventCalendar] = useState([]);
-  // const [selectedSubTask, setSelectedSubTask] = useState(null);
   const [form] = Form.useForm();
-  const query = useQueryParams();
+  const [firstLoad, setFirstLoad] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    form.setFieldsValue({
-      ...taskInfo,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!searchParams.get("id")) {
+      form.resetFields();
+      resetSelectedTask();
+    }
+    setFirstLoad(false);
   }, []);
+
+  useEffect(() => {
+    if (firstLoad) return;
+
+    if (!searchParams.get("id") && taskInfo.id) {
+      setSearchParams({ id: taskInfo.id });
+    }
+
+    if (taskInfo.id === searchParams.get("id")) {
+      form.setFieldsValue({
+        ...taskInfo,
+      });
+    }
+  }, [searchParams.get("id"), taskInfo.id, firstLoad]);
+
+  useEffect(() => {
+    getTaskById(searchParams.get("id"));
+  }, [searchParams.get("id")]);
 
   function handleRangeChange(event) {
     createSubTask({
       id: taskInfo.id,
-      subId: eventCalendar.length,
       data: {
-        ...event,
-        subId: eventCalendar.length,
+        id: taskInfo.id,
+        end: moment(event.end).toString(),
+        start: moment(event.start).toString(),
         title: actionTypes.DEFAULT_NAME_TASK + " " + (eventCalendar.length + 1),
         status: "Start",
       },
@@ -81,27 +104,37 @@ function CreateOrEditTask({
   }
 
   function handleSelectEvent(event) {
-    // createSubTask(event);
     setSelectedSubTask(event);
   }
 
   function handleSubmit(value) {
-    console.log("This is submit:", value);
+    if (searchParams.get("id")) {
+      updateTargetTask({
+        ...taskInfo,
+        nameTask: value.nameTask,
+        status: value.status,
+        statusHower: value.statusHower,
+      });
+    } else {
+      addTask({
+        ...taskInfo,
+        nameTask: value.nameTask,
+        status: value.status,
+        statusHower: value.statusHower,
+      });
+    }
   }
 
   function updateSubTask(updateValue) {
     setSelectedSubTask(null);
-    console.log(updateValue);
     updateTargetSubTask({
       ...updateValue,
+      start: moment(updateValue.start).toString(),
+      end: moment(updateValue.end).toString(),
       id: taskInfo.id,
-      subId: updateValue.id,
+      subId: updateValue.subId,
     });
   }
-
-  useEffect(() => {
-    getTaskById(query.get("id"));
-  }, []);
 
   return (
     <div>
@@ -109,17 +142,27 @@ function CreateOrEditTask({
         <Form
           form={form}
           // onValuesChange={handleValuesFormChange}
+          fields={[
+            {
+              name: ["status"],
+              value: "Start",
+            },
+            {
+              name: ["statusHower"],
+              value: "Do",
+            },
+          ]}
           onFinish={handleSubmit}
         >
           <Typography.Title level={4}>Name of the task</Typography.Title>
           <Form.Item name="nameTask">
-            <Input placeholder="Name task" />
+            <Input placeholder="Name task" required />
           </Form.Item>
 
           <Row>
             <Col span="8">
               <Form.Item name="status" label="Status">
-                <Select defaultValue="Start" style={{ width: 120 }}>
+                <Select style={{ width: 120 }}>
                   <Select.Option value="Start">Start</Select.Option>
                   <Select.Option value="Inprogress">Inprogress</Select.Option>
                   <Select.Option value="End">End</Select.Option>
@@ -129,7 +172,7 @@ function CreateOrEditTask({
             </Col>
             <Col span="8">
               <Form.Item name="statusHower" label="Status eisenhower">
-                <Select defaultValue="Do" style={{ width: 120 }}>
+                <Select style={{ width: 120 }}>
                   <Select.Option value="Do">Do</Select.Option>
                   <Select.Option value="Schedule">Schedule</Select.Option>
                   <Select.Option value="Delegate">Delegate</Select.Option>
@@ -148,35 +191,39 @@ function CreateOrEditTask({
             pagination={{ defaultPageSize: 5 }}
           />
           <Divider />
-          <>
-            <Typography.Title level={5}>Specify the time</Typography.Title>
 
-            <Calendar
-              selectable
-              localizer={localizer}
-              events={eventCalendar}
-              onSelectSlot={handleRangeChange}
-              onSelectEvent={handleSelectEvent}
-              defaultView={"month"}
-              step={60}
-              startAccessor="start"
-              endAccessor="end"
-              style={{ height: 500 }}
-            />
-            <Row style={{ marginTop: "20px" }}>
-              <Col span={24} style={{ textAlign: "right" }}>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Save
-                  </Button>
-                </Form.Item>
-              </Col>
-            </Row>
-          </>
+          {taskInfo.id ? (
+            <>
+              <Typography.Title level={5}>Specify the time</Typography.Title>
+              <Calendar
+                selectable
+                localizer={localizer}
+                events={eventCalendar}
+                onSelectSlot={handleRangeChange}
+                onSelectEvent={handleSelectEvent}
+                defaultView={"month"}
+                step={60}
+                startAccessor="start"
+                endAccessor="end"
+                style={{ height: 500 }}
+              />{" "}
+            </>
+          ) : null}
+          <Row style={{ marginTop: "20px" }}>
+            <Col span={24} style={{ textAlign: "right" }}>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  Save
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
         </Form>
       </Card>
       {selectedSubTask ? (
         <ModalSubTask
+          removeTargetSubTask={removeTargetSubTask}
+          taskInfo={taskInfo}
           selectedSubTask={selectedSubTask}
           setSelectedSubTask={setSelectedSubTask}
           updateSubTask={updateSubTask}
@@ -197,7 +244,11 @@ export default connect(
   {
     createSubTask,
     getTaskById,
+    resetSelectedTask,
     setSelectedSubTask,
     updateTargetSubTask,
+    updateTargetTask,
+    removeTargetSubTask,
+    addTask,
   }
 )(CreateOrEditTask);
