@@ -16,6 +16,9 @@ import {
   removeTargetSubTaskSuccess,
   addTaskFailure,
   addTaskSuccess,
+  createStepOfSubTask,
+  createStepOfSubTaskSucccess,
+  createStepOfSubTaskFailure,
 } from "../actions/createOrEditTaskActions";
 import * as actionTypes from "../constant/ActionTypes";
 import * as service from "../services/createOrEditTaskServices";
@@ -137,6 +140,23 @@ const removeTargetSubTaskEpic = (action$) =>
     )
   );
 
+const createStepSubTaskEpic = (action$) =>
+  action$.pipe(
+    ofType(actionTypes.CREATE_STEP_SUBTASK),
+    switchMap((action) =>
+      from(service.createStepOfSubTask(action.payload)).pipe(
+        switchMap(() => {
+          toast.success("Create step success");
+          return of(createStepOfSubTaskSucccess(action.payload));
+        }),
+        catchError((error) => {
+          toast.error("Create step error");
+          return of(createStepOfSubTaskFailure(error));
+        })
+      )
+    )
+  );
+
 export const createOrEditTaskEpic = [
   addTaskEpic,
   getTaskByIdEpic,
@@ -146,4 +166,5 @@ export const createOrEditTaskEpic = [
   updateTargetSubTaskEpic,
   updateTargetTaskEpic,
   removeTargetSubTaskEpic,
+  createStepSubTaskEpic,
 ];

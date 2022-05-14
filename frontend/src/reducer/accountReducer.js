@@ -6,10 +6,9 @@ const accountInit = {
 
 export default function accountReducer(state = accountInit, action) {
   switch (action.type) {
-    case actionType.SOME_STUFF_HERE:
+    case actionType.SET_USER_SUCCESS:
       return {
-        ...state,
-        // some stuff here
+        ...action.payload,
       };
     default:
       return state;

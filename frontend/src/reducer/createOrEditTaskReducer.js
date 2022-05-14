@@ -1,6 +1,5 @@
 import * as actionTypes from "../constant/ActionTypes";
 import { obj2ArrayShallow } from "../utils/utils";
-import moment from "moment";
 
 const initState = {
   nameTask: "",
@@ -18,14 +17,14 @@ export default function createOrEditReducer(state = initState, action) {
         ...action.payload,
       };
     case actionTypes.GET_TASK_BY_ID_SUCCESS:
-      const subTasks = obj2ArrayShallow(action.payload.subTasks)
+      const subTasks = obj2ArrayShallow(action.payload.subTasks);
       return {
         ...state,
         ...action.payload,
-        subTasks: subTasks.map(subTask => ({
+        subTasks: subTasks.map((subTask) => ({
           ...subTask,
           start: new Date(subTask.start),
-          end: new Date(subTask.end)
+          end: new Date(subTask.end),
         })),
       };
     case actionTypes.RESET_SELECTED_TASK_SUCCESS:
@@ -38,8 +37,8 @@ export default function createOrEditReducer(state = initState, action) {
       const targetSubTask = {
         ...action.payload,
         start: new Date(action.payload.start),
-        end: new Date(action.payload.end)
-      }
+        end: new Date(action.payload.end),
+      };
       return {
         ...state,
         subTasks: [...state.subTasks, targetSubTask],
@@ -55,7 +54,7 @@ export default function createOrEditReducer(state = initState, action) {
       newEventCalendar[action.payload.id] = {
         ...action.payload,
         start: new Date(action.payload.start),
-        end: new Date(action.payload.end)
+        end: new Date(action.payload.end),
       };
 
       return {
@@ -69,6 +68,13 @@ export default function createOrEditReducer(state = initState, action) {
           (item) => item.subId !== action.payload.subId
         ),
       };
+    case actionTypes.CREATE_STEP_SUBTASK_SUCCESS:
+      return {
+        ...state,
+        subTasks: [
+
+        ]
+      }
     default:
       return state;
   }

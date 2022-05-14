@@ -1,8 +1,9 @@
 import { UnorderedListOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Col, Dropdown, Menu, Row, Typography } from "antd";
+import { Button, Col, Dropdown, Image, Menu, Row, Typography } from "antd";
 import { Header } from "antd/lib/layout/layout";
 import React from "react";
 import firebase from "firebase/compat/app";
+import { connect } from "react-redux";
 
 const menu = (
   <Menu>
@@ -10,12 +11,15 @@ const menu = (
       <Button type="text">Profile</Button>
     </Menu.Item>
     <Menu.Item>
-      <Button type="text" onClick={() => firebase.auth().signOut()}>Sign out</Button>
+      <Button type="text" onClick={() => firebase.auth().signOut()}>
+        Sign out
+      </Button>
     </Menu.Item>
   </Menu>
 );
 
-export default function Title() {
+function Title({ userInfor }) {
+  console.log("this is userInfor:", userInfor);
   return (
     <Header style={{ backgroundColor: "white" }}>
       <Row>
@@ -30,7 +34,7 @@ export default function Title() {
             Management all the task
           </Typography.Title>
         </Col>
-        <Col span={3} offset={11}>
+        <Col span={4} offset={10}>
           <Dropdown
             overlay={menu}
             placement="bottom"
@@ -38,8 +42,16 @@ export default function Title() {
           >
             <Button
               size="large"
-              shape="round"
-              icon={<UserOutlined />}
+              type="link"
+              className="text-black py-[4px]"
+              icon={
+                <Image
+                  src={userInfor.photoURL}
+                  height="28px"
+                  className="rounded-full mr-4 mt-2 h-[28px] w-[28px]"
+                  preview={false}
+                />
+              }
               onClick={() => this.enterLoading(2)}
             >
               {firebase.auth().currentUser.displayName}
@@ -50,3 +62,7 @@ export default function Title() {
     </Header>
   );
 }
+
+export default connect((state) => ({
+  userInfor: state.account._delegate,
+}))(Title);

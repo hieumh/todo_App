@@ -53,3 +53,21 @@ export const REMOVE_TARGET_SUBTASK_SUCCESS =
   "[Task edit] REMOVE_TARGET_SUBTASK_SUCCESS";
 export const REMOVE_TARGET_SUBTASK_FAILURE =
   "[Task edit] REMOVE_TARGET_SUBTASK_FAILURE";
+export const CREATE_STEP_SUBTASK = "[Task edit] CREATE_STEP_SUBTASK";
+export const CREATE_STEP_SUBTASK_SUCCESS =
+  "[Task edit] CREATE_STEP_SUBTASK_SUCCESS";
+export const CREATE_STEP_SUBTASK_FAILURE =
+  "[Task edit] CREATE_STEP_SUBTASK_FAILURE";
+
+// Account
+export const LOGIN = "[Account action] LOGIN";
+export const LOGIN_SUCCESS = "[Account action] LOGIN_SUCCESS";
+export const LOGIN_FAILURE = "[Account action] LOGIN_FAILURE";
+
+export const LOGOUT = "[Account action] LOGOUT";
+export const LOGOUT_SUCCESS = "[Account action] LOGOUT_SUCCESS";
+export const LOGOUT_FAILURE = "[Account action] LOGOUT_FAILURE";
+
+export const SET_USER = "[Set account] SET_USER";
+export const SET_USER_SUCCESS = "[Set account] SET_USER_SUCCESS";
+export const SET_USER_FAILURE = "[Set account] SET_USER_FAILURE";

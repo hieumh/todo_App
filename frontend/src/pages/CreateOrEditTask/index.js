@@ -8,9 +8,10 @@ import {
   Row,
   Select,
   Table,
+  Tree,
   Typography,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -28,6 +29,8 @@ import {
 import { removeTargetSubTask } from "../../actions/createOrEditTaskActions";
 import { connect } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import { CarryOutOutlined, FormOutlined } from "@ant-design/icons";
+import StepOfWorkCard from "./StepOfWorkCard";
 
 const localizer = momentLocalizer(moment);
 
@@ -185,11 +188,14 @@ function CreateOrEditTask({
           <Divider />
           <Typography.Title level={4}>Step of work</Typography.Title>
 
-          <Table
+          {/* <Table
             columns={columns}
             dataSource={eventCalendar}
             pagination={{ defaultPageSize: 5 }}
-          />
+          /> */}
+
+          <StepOfWorkCard subTasks={eventCalendar}/>
+
           <Divider />
 
           {taskInfo.id ? (

@@ -111,3 +111,18 @@ export const removeTargetSubTaskFailure = (error) => ({
   type: actionTypes.REMOVE_TARGET_SUBTASK_FAILURE,
   error: error,
 });
+
+export const createStepOfSubTask = (data) => ({
+  type: actionTypes.CREATE_STEP_SUBTASK,
+  payload: data,
+})
+
+export const createStepOfSubTaskSucccess = (data) => ({
+  type: actionTypes.CREATE_STEP_SUBTASK_SUCCESS,
+  payload: data,
+})
+
+export const createStepOfSubTaskFailure = (error) => ({
+  type: actionTypes.CREATE_STEP_SUBTASK_FAILURE,
+  error,
+})

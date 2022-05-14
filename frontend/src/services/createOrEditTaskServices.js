@@ -40,3 +40,12 @@ export const removeTargetSubTask = (data) =>
       throw err;
     }
   );
+
+export const createStepOfSubTask = (data) =>
+  addData({
+    route: `/tasks/${data.id}/subTasks/${data.subId}/steps/`,
+    data: data.step,
+    key: "stepId",
+  }).catch((err) => {
+    throw err;
+  });
