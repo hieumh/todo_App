@@ -10,17 +10,19 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^4.18.2",
     "axios": "^0.26.1",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "firebase": "^9.6.10",
     "lodash": "^4.17.21",
+    "mini-css-extract-plugin": "^2.6.0",
     "moment": "^2.29.1",
+    "postcss-cli": "^9.1.0",
+    "process": "^0.11.10",
     "react": "^17.0.2",
     "react-big-calendar": "^0.38.5",
     "react-dom": "^17.0.2",
     "react-firebaseui": "^6.0.0",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.1",
-    "react-scripts": "5.0.0",
     "react-toastify": "^8.2.0",
     "redux": "^4.1.2",
     "redux-observable": "^2.0.0",
@@ -28,8 +30,8 @@
     "web-vitals": "^2.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "dev": "webpack serve --env mode=development",
+    "build": "webpack --mode=production",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -52,8 +54,21 @@
     ]
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.4",
-    "postcss": "^8.4.12",
-    "tailwindcss": "^3.0.23"
+    "@babel/preset-env": "^7.17.10",
+    "@babel/preset-react": "^7.16.7",
+    "autoprefixer": "^10.4.7",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "dotenv-webpack": "^7.1.0",
+    "html-webpack-plugin": "^5.5.0",
+    "less-loader": "^10.2.0",
+    "postcss": "^8.4.13",
+    "postcss-loader": "^6.2.1",
+    "postcss-preset-env": "^7.5.0",
+    "style-loader": "^3.3.1",
+    "tailwindcss": "^3.0.23",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0"
   }
 }

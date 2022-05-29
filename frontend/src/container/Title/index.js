@@ -48,7 +48,7 @@ function Title({ userInfor }) {
                 <Image
                   src={userInfor.photoURL}
                   height="28px"
-                  className="rounded-full mr-4 mt-2 h-[28px] w-[28px]"
+                  className="rounded-full mr-4 h-[28px] w-[28px]"
                   preview={false}
                 />
               }
