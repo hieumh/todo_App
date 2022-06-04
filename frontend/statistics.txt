@@ -1,0 +1,8 @@
+create task
+list task
+
+thống kê:
+- số lượng task hoàn thành
+- số lượng task chưa hoàn thành
+- số lượng task đang trong trạng thái in-progress
+- liệt kê tên những đầu việc
